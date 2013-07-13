@@ -104,4 +104,148 @@ capital all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
 
 --    this way you don't have to repeat patterns in the funciton body
 
--- [ To continue with guards ]
+-- Guards:
+--   - patterns only work for structural purposes
+--   - to test a property of a value, we use guards
+
+bmiTell :: (RealFloat a) => a -> String
+bmiTell bmi
+    | bmi <= 18.5 = "You're underweight!"
+    | bmi <= 25.0 = "You're normal."
+    | bmi <= 30.0 = "You're fat!"
+    | otherwise   = "You're a beached whale. Or perhaps a small moon."
+
+--   - pipes indicate guards
+--   - usually they're indented to the right and lined up
+--   - basically a boolean expression
+--   - otherwise is always True
+--   - any expression can be used in the guard so long as it returns a Boolean:
+
+bmiTell' :: (RealFloat a) => a -> a -> String
+bmiTell' weight height
+    | weight / height ^ 2 <= 18.5 = "You're underweight!"
+    | weight / height ^ 2 <= 25.0 = "You're normal."
+    | weight / height ^ 2 <= 30.0 = "You're fat!"
+    | otherwise                   = "That's no moon..."
+
+--   - notice that there's no = before the guards
+
+max' :: (Ord a) => a -> a -> a
+max' a b
+    | a > b     = a
+    | otherwise = b
+
+--   - guards can also be written inline:
+
+max'' :: (Ord a) => a -> a -> a
+max'' a b | a > b = a | otherwise = b
+
+--     but that doesn't necessarily help readability...
+
+myCompare :: (Ord a) => a -> a -> Ordering
+a `myCompare` b
+    | a > b     = GT
+    | a == b    = EQ
+    | otherwise = LT
+
+-- Where:
+--   - where can be used to stop repetition in guard statements
+--     and means we only have to calculate a common expression once
+
+bmiTell'' :: (RealFloat a) => a -> a -> String
+bmiTell'' weight height
+    | bmi <= 18.5 = "You're underweight!"
+    | bmi <= 25.0 = "You're normal."
+    | bmi <= 30.0 = "You're fat!"
+    | otherwise   = "Sorry, for a second there I thought you were your mother. You're too small."
+    where bmi = weight / height ^ 2
+
+--   - could go a bit further:
+
+bmiTell''' :: (RealFloat a) => a -> a -> String
+bmiTell''' weight height
+    | bmi <= skinny = "You're underweight!"
+    | bmi <= normal = "You're normal."
+    | bmi <= fat    = "You're fat!"
+    | otherwise     = "You lost weight negatively."
+    where bmi = weight / height ^ 2
+          skinny = 18.5
+          normal = 25.0
+          fat = 30.0
+
+--   - for the bottom three lines, (skinny, normal, fat) = (18.5, 25.0, 30.0)
+--     would also work.
+
+initials :: String -> String -> String
+initials firstname lastname = [f] ++ ". " ++ [l] ++ "."
+    where (f:_) = firstname
+          (l:_) = lastname
+
+--   - it's not just constants that can be defined in where blocks, functions can too
+
+calcBmis :: (RealFloat a) => [(a, a)] -> [a]
+calcBmis xs = [bmi w h | (w, h) <- xs]
+    where bmi weight height = weight / height ^ 2
+
+--   - where bindings can be nested
+
+-- Let:
+--   - where bindings span a whole function
+--   - let bindings have a more limited scope
+--   - they can be used for pattern matching
+
+cylinder :: (RealFloat a) => a -> a -> a
+cylinder r h = 
+    let sideArea = 2 * pi * r * h
+        toparea = pi * r ^ 2
+    in  sideArea + 2 * topArea
+
+--   - the form is let <bindings> in <expression>
+--   - things defined in the let part are only available in the in part
+--   - let bindings are expressions, unlike where which is a syntactic construct
+--   - they can be used to introduce functions into a local scope
+--   - to bind several inline, use semicolons
+--   - they can be nested
+--   - you you can pattern match with let bindings
+--   - they can go inside list comprehensions
+
+clacBmis' :: (RealFloat a) => [(a, a)] -> [a]
+calcBmis' xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2]
+
+--   - in the same place as a predicate, but just binds names
+--   - predicates and other sections can still be included
+
+calcBmis'' :: (RealFloat a) => [(a, a)] -> [a]
+calcBmis'' xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2, bmi >= 25.0]
+
+--   - sometimes the in part of the let can be ommited when there is default behaviour
+--     in place, like in listcomps or ghci
+
+-- Case Expressions:
+--   - somewhat similar to case statements in other languages
+--   - are fully-fledged expressions
+--   - allow evaluation based on values and pattern matching
+
+head'' :: [a] -> a
+head'' xs = case xs of [] -> error "No head for empty lists!"
+                       (x:_) -> x
+
+--   - don't have to write as much for the same effects seen earlier
+--   - the expression, in the above case, is matched to the left side of the arrow,
+--     the pattern. If it matches, that one is used.
+--   - while pattern matching can only really be used for functions, case expressions
+--     can be used more or less anywhere
+
+describeList :: [a] -> String
+describeList xs = "The list is " ++ case xs of [] -> "empty."
+                                               [x] -> "a singleton list."
+                                               xs -> "a longer list."
+
+--   - also because pattern matching in function definitions is syntactic sugar for
+--     case expressions, it could have been defined like this:
+
+describeList' :: [a] -> String
+describeList' :: xs = "The list is " ++ what xs
+    where what [] = "empty."
+          what [x] = "a singleton list."
+          what xs = "a longer list."
