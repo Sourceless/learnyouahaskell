@@ -96,4 +96,34 @@ quicksort (x:xs) =
         biggerSorted = quicksort (filter (>x) xs)
     in smallerSorted ++ [x] ++ biggerSorted
 
-    -- to be continued!
+--  - map and filter are an important part of the programmer's toolbox
+--  - even if you map over something several times, thanks to Haskell's
+--    laziness, it'll really only happen once.
+
+largestDivisible :: (Integral a) => a
+largestDivisible = head (filter p [100000,99999..])
+    where p x = x `mod` 3829 == 0
+
+--  - the list doesn't even need to be finite
+--  - this is due to haskell's laziness - the evaluation just stops when
+--    an adequate solution is found.
+--  - takeWhile takes items from a list with a predicate is met
+--  - useful for working with infinite lists because of this
+--  - collatz sequences: take a natural number, if it's even, divide by 2,
+--    else, times by three and add one. The chain finishes at 1.
+
+chain :: (Integral a) => a -> [a]
+chain 1 = [1]
+chain n
+    | even n = n:chain (n `div` 2)
+    | odd n  = n:chain (n*3 + 1)
+
+--  - now to find the number of chains longer than 15 between 1 and 100
+
+numLongChains :: Int
+numLongChains = length (filter isLong (map chain [1..100]))
+    where isLong xs = length xs > 15
+
+--  - we can define infinite lists and peek at bits of them later
+
+-- to be continured
