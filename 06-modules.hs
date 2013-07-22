@@ -79,4 +79,16 @@ numUniques = length . nub
 --   - lines seperates strings into a list split by '\n'
 --   - unlines does the reverse of lines
 --   - words splits text by spaces, unwords does the opposite
+--   - nub takes a list and removes duplicate elements
+--   - delete takes an element and a list and deletes the first occurence of
+--     that element in the list
+--   - \\ is the list difference function
+--   - union returns the union of two lists
+--   - intersect retuns the intersection
+--   - insert takes an elent and a list of elements that can be sorted and puts
+--     in the last position where it's still less or equal to the next element
+--   - there are a bunch of generic functions that use Num as their type instead
+--     of Int
+--   - nubBy, deleteBy, unionBy, intersectBy and groupBy take an equality
+--     function and use that to compare
 --   - TBC
