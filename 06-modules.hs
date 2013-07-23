@@ -91,4 +91,30 @@ numUniques = length . nub
 --     of Int
 --   - nubBy, deleteBy, unionBy, intersectBy and groupBy take an equality
 --     function and use that to compare
---   - TBC
+--   - on from Data.Function can define By-like functions
+--   - there is also sortBy, insertBy, maximumBy and minimumBy
+--   - lists can be compared bu they are compared lexographically
+
+-- Data.Char
+--   - functions that deal with characters
+--   - iscontrol
+--   - isSpace
+--   - isLower
+--   - isUpper
+--   - isAlpha
+--   - isAlphaNum
+--   - isPrint
+--   - isDigit
+--   - isOctDigit
+--   - isHexDigit
+--   - isLetter
+--   - isMark - unicode mark characters
+--   - isNumber
+--   - isPunctuation
+--   - isSymbol
+--   - isSeperator
+--   - isAscii
+--   - isLatin1
+--   - isAsciiUpper
+--   - isAsciiLower
+--   - using Data.List all, 
