@@ -117,4 +117,15 @@ numUniques = length . nub
 --   - isLatin1
 --   - isAsciiUpper
 --   - isAsciiLower
---   - using Data.List all, 
+--   - using all or any, you can check entire lists (i.e. strings)
+--   - it also exports a data type similar to Ordering. It's called
+--     GeneralCategory, allowing us to define categories. To find
+--     out the category of a char, you can use generalCategory
+--   - toUpper
+--   - toLower
+--   - toTitle
+--   - digitToInt
+--   - intToDigit
+--   - ord
+--   - chr
+--
